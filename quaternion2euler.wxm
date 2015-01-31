@@ -1,0 +1,53 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 14.12.1 ] */
+
+/* [wxMaxima: input   start ] */
+/* Setup atensor library to provide the quaternion algebra operations */
+load(atensor)$
+init_atensor(quaternion)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+
+/*
+ * Create quaternions for each euler rotation
+ * 
+ * sX,cX are the sine and cosine of half of angle X, where,
+ * Angle 1 is Roll / x,
+ * Angle 2 is Pitch / y,
+ * Angle 3 is Yaw / z
+ */
+declare([s1,s2,s3,c1,c2,c3], scalar)$
+i: v[1]$
+j: v[2]$
+k: v[1] . v[2]$
+q(w,x,y,z) := w + x.i + y.j +z.k$
+terms(expr) := [coeff(expr, i), coeff(expr,j), coeff(expr,k), expr - i.coeff(expr,i) - j.coeff(expr,j) - k.coeff(expr, k)]$
+
+q1 : q(c1, s1, 0,  0)$
+q2 : q(c2, 0,  s2, 0)$
+q3 : q(c3, 0,  0,  s3)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+/* Compute quaternion conversion for 3-2-1 */
+q321: expand(atensimp(q3.q2.q1))$
+q321_1: coeff(q321,i)$
+q321_2: coeff(q321,j)$
+q321_3: coeff(q321,k)$
+q321_0: expand(q321 - q321_1.i - q321_2.j - q321_3.k)$
+display(q321_0,q321_1,q321_2,q321_3);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+/* 1-2-3 */
+q123: expand(atensimp(q1.q2.q3))$
+q123_1: coeff(q123,i)$
+q123_2: coeff(q123,j)$
+q123_3: coeff(q123,k)$
+q123_0: expand(q123 - q123_1.i - q123_2.j - q123_3.k)$
+display(q123_0,q123_1,q123_2,q123_3);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
